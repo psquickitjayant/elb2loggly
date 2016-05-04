@@ -290,7 +290,7 @@ exports.handler = function(event, context) {
 			    bufferStream.end()
 
 			    console.log( 'Using Loggly endpoint: ' + LOGGLY_URL )
-
+			    		
 			    bufferStream
 			     .pipe(csvToJson)
 			     .pipe(parser)
@@ -310,7 +310,7 @@ exports.handler = function(event, context) {
 					   ' to ' + LOGGLY_URL + ". Parsed " + eventsParsed + " events."
 					   );
 			   }
-
+			   console.log('script is exiting');	
 			   context.done();
 		       }
 		       );
