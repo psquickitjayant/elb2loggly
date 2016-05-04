@@ -290,20 +290,31 @@ exports.handler = function(event, context) {
 			    bufferStream.end()
 
 			    console.log( 'Using Loggly endpoint: ' + LOGGLY_URL )
-			    		
+			    consoe.log('request setting timeout to 30 seconds');
 			    bufferStream
 			     .pipe(csvToJson)
 			     .pipe(parser)
 			     .pipe(jsonToStrings)
-			     .pipe(request.post(LOGGLY_URL)).on('error', function(err) {next(err)}).on('end', function() {next()})
+			     .pipe(request.post(LOGGLY_URL, {timeout: 30000})).on('error', function(err) {next(err)}).on('end', function() {next()})
 			}
 			], function (err) {
 			   if (err) {
-			       console.error(
+			       	if(err.code === 'ETIMEDOUT' ){
+			       		if(err.connect === true){
+			       	   		console.log('It is a connection timeout. Closing script');
+			       		}
+			       		else{
+			       			console.log('It is a read timeout. Closing script');
+			       		}
+			       }	
+			       else{
+			       	    console.error(
 					     'Unable to read ' + bucket + '/' + key +
 					     ' and upload to loggly' +
 					     ' due to an error: ' + err
-					     );
+					     );	
+			       }	
+			       
 			   } else {
 			       console.log(
 					   'Successfully uploaded ' + bucket + '/' + key +
@@ -312,7 +323,6 @@ exports.handler = function(event, context) {
 			   }
 			   console.log('script is exiting');	
 			   context.done();
-		       }
-		       );
+		});
    }
 };
