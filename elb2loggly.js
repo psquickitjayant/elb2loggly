@@ -290,7 +290,7 @@ exports.handler = function(event, context) {
 			    bufferStream.end()
 
 			    console.log( 'Using Loggly endpoint: ' + LOGGLY_URL )
-			    consoe.log('request setting timeout to 30 seconds');
+			    console.log('request setting timeout to 30 seconds');
 			    bufferStream
 			     .pipe(csvToJson)
 			     .pipe(parser)
